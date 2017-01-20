@@ -1,0 +1,38 @@
+version: '2'
+
+services:
+    nginx:
+        restart: always
+        build:
+            context: ../
+            dockerfile: DockerfileNginx
+        image: pybossa_nginx
+        container_name: pybossa_nginx
+        volumes_from:
+            - pybossa_web
+        links:
+            - pybossa_web
+        ports:
+            - "8023:80"
+
+    pybossa_postgres:
+        restart: always
+        image: postgres:9.5
+        container_name: pybossa_postgres
+
+    pybossa_web:
+        restart: always
+        image: pybossa:latest
+        container_name: pybossa_web
+        build:
+            context: ../
+            dockerfile: Dockerfile
+        ports:
+            - "8020:22"
+            - "8022:5000"
+        volumes:
+            - ../:/srv/pybossa/project
+        working_dir: "/srv/pybossa/project"
+        depends_on:
+            - pybossa_postgres
+        command: scripts/startup.sh

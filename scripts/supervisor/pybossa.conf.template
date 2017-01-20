@@ -1,0 +1,11 @@
+[program:pybossa]
+command=/srv/pybossa/env/bin/uwsgi /srv/pybossa/project/pybossa/pybossa.ini
+directory=/srv/pybossa/project/pybossa
+autostart=true
+autorestart=true
+user=pybossa
+log_stdout=true
+log_stderr=true
+logfile=/var/log/pybossa.log
+logfile_maxbytes=10MB
+logfile_backups=2
