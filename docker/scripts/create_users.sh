@@ -10,7 +10,7 @@ PROJECT_APP_VENV=$PROJECT_APP_VENV
 """ >> /etc/environment
 
 echo "--> Refreshing os environment variables"
-source /etc/environment
+. /etc/environment
 
 echo "--> Creating superuser '$PROJECT_SUDO_USER'"
 useradd --user-group \
