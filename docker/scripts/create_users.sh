@@ -28,6 +28,10 @@ useradd --system --user-group \
     $PROJECT_APP_USER
 chown $PROJECT_APP_USER: $PROJECT_APP_HOME
 
+echo "--> Creating project directory"
+mkdir $PROJECT_APP_HOME/project
+chown $PROJECT_APP_USER: $PROJECT_APP_HOME/project
+
 echo "--> Updating user '$PROJECT_SUDO_USER' and '$PROJECT_APP_USER' groups"
 usermod -aG $PROJECT_APP_USER $PROJECT_SUDO_USER
 usermod -aG $PROJECT_SUDO_USER $PROJECT_APP_USER
