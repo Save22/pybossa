@@ -9,18 +9,58 @@ services:
         image: pybossa_nginx
         container_name: pybossa_nginx
         volumes_from:
-            - pybossa_web
+            - web
         links:
-            - pybossa_web
+            - web
+            - postgres
+            - redis_master:redis-master
+            - redis_slave
+            - redis_sentinel
         ports:
-            - "8023:80"
+            - "80:80"
+            - "443:443"
 
-    pybossa_postgres:
+    postgres:
         restart: always
         image: postgres:9.5
+        volumes:
+            - /srv/lib/pybossa/postgres:/var/lib/postgresql/data/
+            - /srv/log/pybossa/postgres:/var/log/postgresql/
+            - ../scripts/db:/docker-entrypoint-initdb.d
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: password
+            PGDB_NAME: pybossa_postgres
+            PGDB_USER: pybossa
+            PGDB_PASS: tester
         container_name: pybossa_postgres
 
-    pybossa_web:
+    redis_master:
+        restart: always
+        image: redis:3
+        volumes:
+            - /srv/lib/pybossa/redis_master:/data
+
+    redis_slave:
+        restart: always
+        image: redis:3
+        volumes:
+            - /srv/lib/pybossa/redis_slave:/data
+        command: redis-server --slaveof redis-master 6379
+
+    redis_sentinel:
+        restart: always
+        image: erichsu/redis-sentinel:latest
+        volumes:
+            - /srv/lib/pybossa/redis_sentinel:/data
+        environment:
+            SENTINEL_QUORUM: 2
+            SENTINEL_DOWN_AFTER: 30000
+            SENTINEL_FAILOVER: 180000
+
+    web:
         restart: always
         image: pybossa:latest
         container_name: pybossa_web
@@ -28,11 +68,9 @@ services:
             context: ../
             dockerfile: Dockerfile
         ports:
-            - "8020:22"
-            - "8022:5000"
+            - "2767:22"
+            - "5000:5000"
         volumes:
             - ../:/srv/pybossa/project
         working_dir: "/srv/pybossa/project"
-        depends_on:
-            - pybossa_postgres
         command: scripts/startup.sh
