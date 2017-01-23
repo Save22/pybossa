@@ -4,7 +4,7 @@ services:
     nginx:
         restart: always
         build:
-            context: .
+            context: ../
             dockerfile: DockerfileNginx
         image: pybossa_nginx
         volumes_from:
@@ -26,9 +26,9 @@ services:
         env_file:
             - vars.env
         volumes:
-            - var/lib/postgres:/var/lib/postgresql/data/
-            - var/log/postgres:/var/log/postgresql/
-            - scripts/db:/docker-entrypoint-initdb.d
+            - ./var/lib/postgres:/var/lib/postgresql/data/
+            - ./var/log/postgres:/var/log/postgresql/
+            - ./scripts/db:/docker-entrypoint-initdb.d
         ports:
             - "5432:5432"
         container_name: pybossa_postgres
@@ -37,13 +37,13 @@ services:
         restart: always
         image: redis:3
         volumes:
-            - var/lib/redis_master:/data
+            - ./var/lib/redis_master:/data
 
     redis_slave:
         restart: always
         image: redis:3
         volumes:
-            - var/lib/redis_slave:/data
+            - ./var/lib/redis_slave:/data
         command: redis-server --slaveof redis-master 6379
 
     redis_sentinel:
@@ -52,7 +52,7 @@ services:
         env_file:
             - vars.env
         volumes:
-            - var/lib/redis_sentinel:/data
+            - ./var/lib/redis_sentinel:/data
 
     web:
         restart: always
@@ -60,7 +60,7 @@ services:
         container_name: pybossa_web
         build:
             context: ../
-            dockerfile: Dockerfile
+            dockerfile: DockerfileWeb
         env_file:
             - vars.env
         volumes:
