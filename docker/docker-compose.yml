@@ -1,0 +1,72 @@
+version: '2'
+
+services:
+    nginx:
+        restart: always
+        build:
+            context: .
+            dockerfile: DockerfileNginx
+        image: pybossa_nginx
+        volumes_from:
+            - web
+        ports:
+            - "80:80"
+            - "443:443"
+        container_name: pybossa_nginx
+        links:
+            - web
+            - postgres
+            - redis_master:redis-master
+            - redis_slave
+            - redis_sentinel
+
+    postgres:
+        restart: always
+        image: postgres:9.5
+        env_file:
+            - vars.env
+        volumes:
+            - var/lib/postgres:/var/lib/postgresql/data/
+            - var/log/postgres:/var/log/postgresql/
+            - scripts/db:/docker-entrypoint-initdb.d
+        ports:
+            - "5432:5432"
+        container_name: pybossa_postgres
+
+    redis_master:
+        restart: always
+        image: redis:3
+        volumes:
+            - var/lib/redis_master:/data
+
+    redis_slave:
+        restart: always
+        image: redis:3
+        volumes:
+            - var/lib/redis_slave:/data
+        command: redis-server --slaveof redis-master 6379
+
+    redis_sentinel:
+        restart: always
+        image: erichsu/redis-sentinel:latest
+        env_file:
+            - vars.env
+        volumes:
+            - var/lib/redis_sentinel:/data
+
+    web:
+        restart: always
+        image: pybossa_web:latest
+        container_name: pybossa_web
+        build:
+            context: ../
+            dockerfile: Dockerfile
+        env_file:
+            - vars.env
+        volumes:
+            - ../:/srv/pybossa/project
+        ports:
+            - "2767:22"
+            - "5000:5000"
+        working_dir: "/srv/pybossa/project"
+        command: scripts/startup.sh
