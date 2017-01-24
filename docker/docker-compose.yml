@@ -12,7 +12,7 @@ services:
         ports:
             - "80:80"
             - "443:443"
-        container_name: pybossa_nginx
+        container_name: pybossa_ng
         links:
             - web
             - postgres
@@ -31,13 +31,14 @@ services:
             - ./scripts/db:/docker-entrypoint-initdb.d
         ports:
             - "5432:5432"
-        container_name: pybossa_postgres
+        container_name: pybossa_pg
 
     redis_master:
         restart: always
         image: redis:3
         volumes:
             - ./var/lib/redis_master:/data
+        container_name: pybossa_rd_ms
 
     redis_slave:
         restart: always
@@ -45,6 +46,7 @@ services:
         volumes:
             - ./var/lib/redis_slave:/data
         command: redis-server --slaveof redis-master 6379
+        container_name: pybossa_rd_sl
 
     redis_sentinel:
         restart: always
@@ -53,11 +55,12 @@ services:
             - vars.env
         volumes:
             - ./var/lib/redis_sentinel:/data
+        container_name: pybossa_rd_sn
 
     web:
         restart: always
         image: pybossa_web:latest
-        container_name: pybossa_web
+        container_name: pybossa_wb
         build:
             context: ../
             dockerfile: DockerfileWeb
