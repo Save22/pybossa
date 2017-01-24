@@ -5,6 +5,7 @@ PROJECT_VAR=$PROJECT_APP_HOME/project/docker/var
 
 echo "--> Starting supervisor service"
 /usr/bin/supervisord \
+    --configuration /etc/supervisor/supervisord.conf \
     --user $PROJECT_APP_USER \
     --directory $PROJECT_APP_HOME/project \
     --pidfile $PROJECT_VAR/run/supervisord.pid \

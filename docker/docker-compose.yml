@@ -16,7 +16,7 @@ services:
         links:
             - web
             - postgres
-            - redis_master:redis-master
+            - redis_master
             - redis_slave
             - redis_sentinel
 
