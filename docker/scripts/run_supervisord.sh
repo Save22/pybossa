@@ -2,10 +2,11 @@
 # NOTE: This script must be ran as root or a superuser
 
 PROJECT_VAR=$PROJECT_APP_HOME/project/docker/var
+CONFIG=$PROJECT_APP_HOME/project/docker/supervisord.conf
 
 echo "--> Starting supervisor service"
 /usr/bin/supervisord \
-    --configuration /etc/supervisor/supervisord.conf \
+    --configuration $CONFIG \
     --user $PROJECT_APP_USER \
     --directory $PROJECT_APP_HOME/project \
     --pidfile $PROJECT_VAR/run/supervisord.pid \
