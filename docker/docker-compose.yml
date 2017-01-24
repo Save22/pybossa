@@ -59,7 +59,7 @@ services:
         container_name: pybossa_rd_sn
         links:
             - redis_master:redis-master
-            - redis_sentinel
+            - redis_slave
 
     web:
         restart: always
