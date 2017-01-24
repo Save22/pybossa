@@ -16,7 +16,3 @@ echo "--> Starting services"
 # Supervisor
 cd $PROJECT_APP_HOME/project \
     && . docker/scripts/run_supervisord.sh &
-
-# SSH service should be the last to run
-cd $PROJECT_APP_HOME/project \
-    && . docker/scripts/run_sshd.sh
