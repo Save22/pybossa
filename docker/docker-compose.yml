@@ -69,4 +69,4 @@ services:
             - "2767:22"
             - "5000:5000"
         working_dir: "/srv/pybossa/project"
-        command: scripts/startup.sh
+        command: docker/web_startup.sh
