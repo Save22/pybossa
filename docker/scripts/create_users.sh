@@ -7,6 +7,7 @@ PROJECT_APP_USER=$PROJECT_APP_USER
 PROJECT_APP_HOME=$PROJECT_APP_HOME
 PROJECT_APP_DIR=$PROJECT_APP_DIR
 PROJECT_APP_VENV=$PROJECT_APP_VENV
+PYBOSSA_SETTINGS=$PROJECT_APP_HOME/project/docker/settings_local.py
 """ >> /etc/environment
 
 echo "--> Refreshing os environment variables"

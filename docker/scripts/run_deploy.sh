@@ -7,7 +7,13 @@ echo "--> Installing project requirements"
 cd $PROJECT_APP_HOME/project
 . docker/scripts/install_requirements.sh
 
+echo "--> Starting services"
 
+# Supervisor
+cd $PROJECT_APP_HOME/project
+. docker/scripts/copy_supervisord_config.sh \
+    && . docker/scripts/run_supervisord.sh &
 
-
-echo "--> done"
+# SSH service should be the last to run
+cd $PROJECT_APP_HOME/project
+. docker/scripts/run_sshd.sh
