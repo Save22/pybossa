@@ -7,6 +7,10 @@ echo "--> Installing project requirements"
 cd $PROJECT_APP_HOME/project \
     && . docker/scripts/install_requirements.sh
 
+echo "--> Running migrations"
+cd $PROJECT_APP_HOME/project \
+    && . docker/scripts/run_migrations.sh
+
 echo "--> Starting services"
 
 # Supervisor
