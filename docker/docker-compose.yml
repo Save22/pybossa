@@ -16,8 +16,7 @@ services:
         links:
             - web
             - postgres
-            - redis_master
-            - redis_slave
+            - redis_master:redis-master
             - redis_sentinel
 
     postgres:
@@ -47,6 +46,8 @@ services:
             - ./var/lib/redis_slave:/data
         command: redis-server --slaveof redis-master 6379
         container_name: pybossa_rd_sl
+        links:
+            - redis_master:redis-master
 
     redis_sentinel:
         restart: always
@@ -56,6 +57,9 @@ services:
         volumes:
             - ./var/lib/redis_sentinel:/data
         container_name: pybossa_rd_sn
+        links:
+            - redis_master:redis-master
+            - redis_sentinel
 
     web:
         restart: always
